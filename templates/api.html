@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>My Health Topics - REST API</title>
+	<link rel="stylesheet" href="/static/css/app-api.css" type="text/css">
+	<script type="text/javascript">
+		var port = (window.location.port != 80) ? ':' + window.location.port : '';
+		var apiURL = 'http://' + window.location.hostname + port + '/api';//http://acsyshealthguide.appspot.com/api
+		
+		function getHealthUpdates()
+		{
+			window.location = apiURL + '/healthupdates/format/' + format('healthupdates-format');
+		}
+		
+		function getClinicalTrials()
+		{
+			window.location = apiURL + '/clinicaltrials/keyword/' + escape(elm('clinicaltrials-keyword-val')) + '/state/' + escape(elm('clinicaltrials-state-val')) + '/format/' + format('clinicaltrials-format');
+		}
+		
+		function getHealthDiagnosis()
+		{
+			window.location = apiURL + '/healthdata/code/' + escape(elm('healthdiagnosis-val')) + '/lan/' + format('healthdiagnosis-lan') + '/format/' + format('healthdiagnosis-format');
+		}
+		
+		function getHealthTopic()
+		{
+			window.location = apiURL + '/healthdata/keyword/' + escape(elm('healthtopic-val')) + '/format/' + format('healthtopic-format');
+		}
+		
+		function getHealthNews()
+		{
+			window.location = apiURL + '/healthnews/lan/' + format('healthnews-lan') + '/format/' + format('healthnews-format');
+		}
+		
+		function hospSearchById()
+		{
+			window.location = apiURL + '/hospital-info/id/' + elm('hospbyid-val') + '/format/' + format('hospbyid-format');
+		}
+		
+		function hospSearchByZip()
+		{
+			window.location = apiURL + '/hospital-search/zip/' + elm('hospbyzip-val') + '/format/' + format('hospbyzip-format');
+		}
+		
+		function hospSearchByCityState()
+		{
+			window.location = apiURL + '/hospital-search/citystate/' + escape(elm('hospbycitystate-val')) + '/format/' + format('hospbycitystate-format');
+		}
+		
+		function hospSearchByLatLon()
+		{
+			window.location = apiURL + '/hospital-search/geopt/' + escape(elm('hospbylatlon-val')) + '/format/' + format('hospbylatlon-format');
+		}
+		
+		function dialysisSearchById()
+		{
+			window.location = apiURL + '/dialysis-center-info/id/' + elm('dialysisbyid-val') + '/format/' + format('dialysisbyid-format');
+		}
+		
+		function dialysisSearchByZip()
+		{
+			window.location = apiURL + '/dialysis-center-search/zip/' + elm('dialysisbyzip-val') + '/format/' + format('dialysisbyzip-format');
+		}
+		
+		function dialysisSearchByCityState()
+		{
+			window.location = apiURL + '/dialysis-center-search/citystate/' + escape(elm('dialysisbycitystate-val')) + '/format/' + format('dialysisbycitystate-format');
+		}
+		
+		function dialysisSearchByLatLon()
+		{
+			window.location = apiURL + '/dialysis-center-search/geopt/' + escape(elm('dialysisbylatlon-val')) + '/format/' + format('dialysisbylatlon-format');
+		}
+		
+		function getHealthMasterDataSet()
+		{
+			window.location = apiURL + '/healthsdataset/query/' + escape(elm('healthmasterdataset-keyword')) + '/zip/' + elm('healthmasterdataset-zip') + '/lan/' + format('healthmasterdataset-lan')  + '/type/' + format('healthmasterdataset-type')  + '/format/' + format('healthmasterdataset-format') ;
+		}
+		
+		function elm(id) { return (document.getElementById(id)) ? document.getElementById(id).value : '' }
+		function format(name) 
+		{ 
+			var elm = document.getElementsByName(name);
+			if (!elm)
+			{
+				return 'json';
+			}
+			for( i = 0; i < elm.length; i++)
+			{
+				if (elm[i].checked) return elm[i].value;
+			}
+			return 'json';
+		}
+		
+	</script>
+</head>
+<body>
+
+<div id="header">	 
+<h1>My Health Topics REST API Documentation</h1>
+</div>
+<div id="main">
+API Index
+<ul>
+	<li><a href="#healthmasterdataset">Health Keyword Proximity Search</a></li>
+	<li><a href="#healthupdates">Health Updates</a></li>
+	<li><a href="#healthnews">Health News</a></li>
+	<li><a href="#clinicaltrials">Clinical Trials</a></li>
+	<li><a href="#healthtopics">Health Topics (Keyword)</a></li>
+	<li><a href="#healthtopics">Health Diagnosis (ICD-9)</a></li>
+	<li><a href="#hospitals">Hospital Proximity Search API</a></li>
+	<li><a href="#dialysis">Dialysis Centers Proximity Search API</a></li>
+	<li><a href="#datatranslation">Data Translation API</a></li>
+</ul>
+
+<a name="healthmasterdataset"></a>
+<h2>Health Keyword Proximity Search REST API</h2>
+<fieldset>
+		<b>Get Health Topic Data, Diagnosis, and Hospital Locations in English or Spanish </b>&nbsp;<small>(returns XML or JSON)</small><br /><br />
+        <table>
+        <tr>
+         <td>URL:</td>
+         <td>http://acsyshealthguide.appspot.com/api/healthsdataset/query/<em>&lt;keyword or ICD-9 code&gt;</em>/zip/<em>&lt;zip code&gt;</em>/lan/<em>&lt;language&gt;</em>/type/<em>&lt;keyword type&gt;</em>/format/<em>&lt;format&gt;</em></td>
+        </tr>
+		<tr>
+         <td>Query:</td>
+         <td><input type="text" id="healthmasterdataset-keyword" name="healthmasterdataset-keyword" />&nbsp;<small>(e.g. diabetes, 250.33)</small></td>
+        </tr>
+		<tr>
+         <td>Zip:</td>
+         <td><input type="text" id="healthmasterdataset-zip" name="healthmasterdataset-zip" />&nbsp;<small>(e.g. 06032)</small></td>
+        </tr>
+		<tr>
+         <td>Language:</td>
+         <td><input type="radio" name="healthmasterdataset-lan" value="en" checked='checked'/>English&nbsp;<input type="radio" name="healthmasterdataset-lan" value="es"/>Spanish</td>
+        </tr>
+		<tr>
+         <td>Query Type:</td>
+         <td><input type="radio" name="healthmasterdataset-type" value="keyword" checked='checked'/>Keyword&nbsp;<input type="radio" name="healthmasterdataset-type" value="icd9"/>ICD-9 Code</td>
+        </tr>
+        <tr>
+         <td>Format:</td>
+         <td><input type="radio" name="healthmasterdataset-format" value="json" checked='checked'/>JSON&nbsp;<input type="radio" name="healthmasterdataset-format" value="xml"/>XML</td>
+        </tr>
+        <tr>
+        <td colspan='2'><input type="button" value=" Invoke " onclick="getHealthMasterDataSet()" /></td>
+        </tr>
+        </table>
+        <br /> 
+</fieldset>
+
+<a name="healthupdates"></a>
+<h2>Health Updates REST API</h2>
+<fieldset>
+		<b>Get Health Updates</b>&nbsp;<small>(returns XML or JSON)</small><br /><br />
+        <table>
+        <tr>
+         <td>URL:</td>
+         <td>http://acsyshealthguide.appspot.com/api/healthupdates/format/<em>&lt;format&gt;</em></td>
+        </tr>
+        <tr>
+         <td>Format:</td>
+         <td><input type="radio" name="healthupdates-format" value="json" checked='checked'/>JSON&nbsp;<input type="radio" name="healthupdates-format" value="xml"/>XML</td>
+        </tr>
+        <tr>
+        <td colspan='2'><input type="button" value=" Invoke " onclick="getHealthUpdates()" /></td>
+        </tr>
+        </table>
+        <br /> 
+</fieldset>
+
+<a name="healthnews"></a>
+<h2>Health Information News REST API</h2>
+<fieldset>
+		<b>Get Health News</b>&nbsp;<small>(returns XML or JSON)</small><br /><br />
+        <table>
+        <tr>
+         <td>URL:</td>
+         <td>http://acsyshealthguide.appspot.com/api/healthnews/lan/<em>&lt;language&gt;/format/<em>&lt;format&gt;</em></td>
+        </tr>
+		<tr>
+         <td>Language:</td>
+         <td><input type="radio" name="healthnews-lan" value="en" checked='checked'/>English&nbsp;<input type="radio" name="healthnews-lan" value="es"/>Spanish</td>
+        </tr>
+        <tr>
+         <td>Format:</td>
+         <td><input type="radio" name="healthnews-format" value="json" checked='checked'/>JSON&nbsp;<input type="radio" name="healthnews-format" value="xml"/>XML</td>
+        </tr>
+        <tr>
+        <td colspan='2'><input type="button" value=" Invoke " onclick="getHealthNews()" /></td>
+        </tr>
+        </table>
+        <br /> 
+</fieldset>
+
+<a name="clinicaltrials"></a>
+<h2>Clinical Trials REST API</h2>
+<fieldset>
+		<b>Get Clinical Trials</b>&nbsp;<small>(returns XML or JSON)</small><br /><br />
+        <table>
+        <tr>
+         <td>URL:</td>
+         <td>http://acsyshealthguide.appspot.com/api/clinicaltrials/keyword/<em>&lt;keyword&gt;</em>/state/<em>&lt;state&gt;</em>/format/<em>&lt;format&gt;</em></td>
+        </tr>
+		<tr>
+         <td>Keyword:</td>
+         <td><input type="text" id="clinicaltrials-keyword-val" name="clinicaltrials-keyword-val" />&nbsp;<small>(e.g. diabetes)</small></td>
+        </tr>
+		<tr>
+         <td>State:</td>
+         <td><input type="text" id="clinicaltrials-state-val" name="clinicaltrials-state-val" />&nbsp;<small>(e.g. CT)</small></td>
+        </tr>
+        <tr>
+         <td>Format:</td>
+         <td><input type="radio" name="clinicaltrials-format" value="json" checked='checked'/>JSON&nbsp;<input type="radio" name="clinicaltrials-format" value="xml"/>XML</td>
+        </tr>
+        <tr>
+        <td colspan='2'><input type="button" value=" Invoke " onclick="getClinicalTrials()" /></td>
+        </tr>
+        </table>
+        <br /> 
+</fieldset>
+
+<a name="healthtopics"></a>
+<fieldset>
+		<b>Get Health Topics</b>&nbsp;<small>(returns XML or JSON)</small><br /><br />
+        <table>
+        <tr>
+         <td>URL:</td>
+         <td>http://acsyshealthguide.appspot.com/api/healthdata/keyword/<em>&lt;keyword&gt;</em>/format/<em>&lt;format&gt;</em></td>
+        </tr>
+		<tr>
+         <td>Keyword:</td>
+         <td><input type="text" id="healthtopic-val" name="healthtopic-val" />&nbsp;<small>(e.g. diabetes)</small></td>
+        </tr>
+        <tr>
+         <td>Format:</td>
+         <td><input type="radio" name="healthtopic-format" value="json" checked='checked'/>JSON&nbsp;<input type="radio" name="healthtopic-format" value="xml"/>XML</td>
+        </tr>
+        <tr>
+        <td colspan='2'><input type="button" value=" Invoke " onclick="getHealthTopic()" /></td>
+        </tr>
+        </table>
+        <br /> 
+</fieldset>
+
+<a name="healthdiagnosis"></a>
+<fieldset>
+		<b>Get Health Diagnosis</b>&nbsp;<small>(returns XML or JSON)</small><br /><br />
+        <table>
+        <tr>
+         <td>URL:</td>
+         <td>http://acsyshealthguide.appspot.com/api/healthdata/code/<em>&lt;keyword&gt;</em>/lan/<em>&lt;language&gt;</em>/format/<em>&lt;format&gt;</em></td>
+        </tr>
+		<tr>
+         <td>ICD-9 Code:</td>
+         <td><input type="text" id="healthdiagnosis-val" name="healthdiagnosis-val" />&nbsp;<small>(e.g. 250.33)</small></td>
+        </tr>
+		<tr>
+         <td>Language:</td>
+         <td><input type="radio" name="healthdiagnosis-lan" value="en" checked='checked'/>English&nbsp;<input type="radio" name="healthdiagnosis-lan" value="es"/>Spanish</td>
+        </tr>
+        <tr>
+         <td>Format:</td>
+         <td><input type="radio" name="healthdiagnosis-format" value="json" checked='checked'/>JSON&nbsp;<input type="radio" name="healthdiagnosis-format" value="xml"/>XML</td>
+        </tr>
+        <tr>
+        <td colspan='2'><input type="button" value=" Invoke " onclick="getHealthDiagnosis()" /></td>
+        </tr>
+        </table>
+        <br /> 
+</fieldset>
+
+<a name="hospitals"></a>
+<h2>Hospital Proximity Search REST API</h2>
+<fieldset>
+		<b>Get Hospitals By Zip</b>&nbsp;<small>(returns XML or JSON)</small><br /><br />
+        <table>
+        <tr>
+         <td>URL:</td>
+         <td>http://acsyshealthguide.appspot.com/api/hospital-search/zip/<em>&lt;zip code&gt;</em>/format/<em>&lt;format&gt;</em></td>
+        </tr>
+        <tr>
+         <td>Zip Code:</td>
+         <td><input type="text" id="hospbyzip-val" name="hospbyzip-val" />&nbsp;<small>(e.g. 06032)</small></td>
+        </tr>
+		<tr>
+         <td>Format:</td>
+         <td><input type="radio" name="hospbyzip-format" value="json" checked='checked'/>JSON&nbsp;<input type="radio" id="hospbyzip-format" name="hospbyzip-format" value="xml"/>XML</td>
+        </tr>
+        <tr>
+        <td colspan='2'><input type="button" value=" Invoke " onclick="hospSearchByZip()" /></td>
+        </tr>
+        </table>
+        <br /> 
+</fieldset>	
+
+<fieldset>
+		<b>Get Hospitals By City &amp; State</b>&nbsp;<small>(returns XML or JSON)</small><br /><br />
+        <table>
+        <tr>
+         <td>URL:</td>
+         <td>http://acsyshealthguide.appspot.com/api/hospital-search/citystate/<em>&lt;city,state&gt;</em>/format/<em>&lt;format&gt;</em></td>
+        </tr>
+        <tr>
+         <td>City &amp; State:</td>
+         <td><input type="text" id="hospbycitystate-val" name="hospbycitystate-val" />&nbsp;<small>(e.g. farmington,ct)</small></td>
+        </tr>
+		<tr>
+         <td>Format:</td>
+         <td><input type="radio" name="hospbycitystate-format" value="json" checked='checked'/>JSON&nbsp;<input type="radio" name="hospbycitystate-format" value="xml"/>XML</td>
+        </tr>
+        <tr>
+        <td colspan='2'><input type="button" value=" Invoke " onclick="hospSearchByCityState()" /></td>
+        </tr>
+        </table>
+        <br /> 
+</fieldset>
+
+<fieldset>
+		<b>Get Hospitals By Latitude &amp; Longitude</b>&nbsp;<small>(returns XML or JSON)</small><br /><br />
+        <table>
+        <tr>
+         <td>URL:</td>
+         <td>http://acsyshealthguide.appspot.com/api/hospital-search/geopt/<em>&lt;lat,lon&gt;</em>/format/<em>&lt;format&gt;</em></td>
+        </tr>
+        <tr>
+         <td>Lat &amp; Lon:</td>
+         <td><input type="text" id="hospbylatlon-val" name="hospbylatlon-val" />&nbsp;<small>(e.g. 41.721746,-72.832489)</small></td>
+        </tr>
+		<tr>
+         <td>Format:</td>
+         <td><input type="radio" name="hospbylatlon-format" value="json" checked='checked'/>JSON&nbsp;<input type="radio" name="hospbylatlon-format" value="xml"/>XML</td>
+        </tr>
+        <tr>
+        <td colspan='2'><input type="button" value=" Invoke " onclick="hospSearchByLatLon()" /></td>
+        </tr>
+        </table>
+        <br /> 
+</fieldset>
+
+<fieldset>
+		<b>Get Hospitals By ID</b>&nbsp;<small>(returns XML or JSON)</small><br /><br />
+        <table>
+        <tr>
+         <td>URL:</td>
+         <td>http://acsyshealthguide.appspot.com/api/hospital-info/id/<em>&lt;hospital id&gt;</em>/format/<em>&lt;format&gt;</em></td>
+        </tr>
+        <tr>
+         <td>Lat &amp; Lon:</td>
+         <td><input type="text" id="hospbyid-val" name="hospbylatlon-val" />&nbsp;<small>(e.g. 70031)</small></td>
+        </tr>
+		<tr>
+         <td>Format:</td>
+         <td><input type="radio" name="hospbyid-format" value="json" checked='checked'/>JSON&nbsp;<input type="radio" name="hospbyid-format" value="xml"/>XML</td>
+        </tr>
+        <tr>
+        <td colspan='2'><input type="button" value=" Invoke " onclick="hospSearchById()" /></td>
+        </tr>
+        </table>
+        <br /> 
+</fieldset>
+
+<!-- dialysis centers api -->
+<a name="dialysis"></a>
+<h2>Dialysis Centers Proximity Search REST API</h2>
+<fieldset>
+		<b>Get Dialysis Centers By Zip</b>&nbsp;<small>(returns XML or JSON)</small><br /><br />
+        <table>
+        <tr>
+         <td>URL:</td>
+         <td>http://acsyshealthguide.appspot.com/api/dialysis-center-search/zip/<em>&lt;zip code&gt;</em>/format/<em>&lt;format&gt;</em></td>
+        </tr>
+        <tr>
+         <td>Zip Code:</td>
+         <td><input type="text" id="dialysisbyzip-val" name="dialysisbyzip-val" />&nbsp;<small>(e.g. 06032)</small></td>
+        </tr>
+		<tr>
+         <td>Format:</td>
+         <td><input type="radio" name="dialysisbyzip-format" value="json" checked='checked'/>JSON&nbsp;<input type="radio"  name="dialysisbyzip-format" value="xml"/>XML</td>
+        </tr>
+        <tr>
+        <td colspan='2'><input type="button" value=" Invoke " onclick="dialysisSearchByZip()" /></td>
+        </tr>
+        </table>
+        <br /> 
+</fieldset>	
+
+<fieldset>
+		<b>Get Dialysis Centers By City &amp; State</b>&nbsp;<small>(returns XML or JSON)</small><br /><br />
+        <table>
+        <tr>
+         <td>URL:</td>
+         <td>http://acsyshealthguide.appspot.com/api/dialysis-center-search/citystate/<em>&lt;city,state&gt;</em>/format/<em>&lt;format&gt;</em></td>
+        </tr>
+        <tr>
+         <td>City &amp; State:</td>
+         <td><input type="text" id="dialysisbycitystate-val" name="dialysisbycitystate-val" />&nbsp;<small>(e.g. farmington,ct)</small></td>
+        </tr>
+		<tr>
+         <td>Format:</td>
+         <td><input type="radio" name="dialysisbycitystate-format" value="json" checked='checked'/>JSON&nbsp;<input type="radio" name="dialysisbycitystate-format" value="xml"/>XML</td>
+        </tr>
+        <tr>
+        <td colspan='2'><input type="button" value=" Invoke " onclick="dialysisSearchByCityState()" /></td>
+        </tr>
+        </table>
+        <br /> 
+</fieldset>
+
+<fieldset>
+		<b>Get Dialysis Centers By Latitude &amp; Longitude</b>&nbsp;<small>(returns XML or JSON)</small><br /><br />
+        <table>
+        <tr>
+         <td>URL:</td>
+         <td>http://acsyshealthguide.appspot.com/api/dialysis-center-search/geopt/<em>&lt;lat,lon&gt;</em>/format/<em>&lt;format&gt;</em></td>
+        </tr>
+        <tr>
+         <td>Lat &amp; Lon:</td>
+         <td><input type="text" id="dialysisbylatlon-val" name="dialysisbylatlon-val" />&nbsp;<small>(e.g. 41.721746,-72.832489)</small></td>
+        </tr>
+		<tr>
+         <td>Format:</td>
+         <td><input type="radio" name="dialysisbylatlon-format" value="json" checked='checked'/>JSON&nbsp;<input type="radio" name="dialysisbylatlon-format" value="xml"/>XML</td>
+        </tr>
+        <tr>
+        <td colspan='2'><input type="button" value=" Invoke " onclick="dialysisSearchByLatLon()" /></td>
+        </tr>
+        </table>
+        <br /> 
+</fieldset>
+
+<fieldset>
+		<b>Get Dialysis Center By ID</b>&nbsp;<small>(returns XML or JSON)</small><br /><br />
+        <table>
+        <tr>
+         <td>URL:</td>
+         <td>http://acsyshealthguide.appspot.com/api/dialysis-center-info/id/<em>&lt;hospital id&gt;</em>/format/<em>&lt;format&gt;</em></td>
+        </tr>
+        <tr>
+         <td>Lat &amp; Lon:</td>
+         <td><input type="text" id="dialysisbyid-val" name="dialysisbyid-val" />&nbsp;<small>(e.g. 70031)</small></td>
+        </tr>
+		<tr>
+         <td>Format:</td>
+         <td><input type="radio" name="dialysisbyid-format" value="json" checked='checked'/>JSON&nbsp;<input type="radio" name="dialysisbyid-format" value="xml"/>XML</td>
+        </tr>
+        <tr>
+        <td colspan='2'><input type="button" value=" Invoke " onclick="dialysisSearchById()" /></td>
+        </tr>
+        </table>
+        <br /> 
+</fieldset>
+
+<a name="datatranslation"></a>
+<form method="post" action="/api/translate">
+<fieldset>
+		<b>Data Translation</b>&nbsp;<small>(returns XML or JSON)</small><br /><br />
+        <table>
+        <tr>
+         <td>POST URL:</td>
+         <td>http://acsyshealthguide.appspot.com/api/translate</td>
+        </tr>
+		<tr>
+         <td>Data:</td>
+         <td>
+			<textarea name="data" rows="5" cols="15"></textarea>
+		</td>
+        </tr>
+		<tr>
+         <td>Source Language:</td>
+         <td>
+			Auto-Detect
+		</td>
+        </tr>
+        <tr>
+         <td>To Language:</td>
+         <td>
+			<select name="language">
+				<option value="af">Afrikaans</option>
+				<option value="sq">Albanian</option>
+				<option value="ar">Arabic</option>
+				<option value="hy">Armenian</option>
+				<option value="az">Azerbaijani</option>
+				<option value="eu">Basque</option>
+				<option value="be">Belarusian</option>
+				<option value="bn">Bengali</option>
+				<option value="bg">Bulgarian</option>
+				<option value="ca">Catalan</option>
+				<option value="zh-CN">Chinese (Simplified)</option>
+				<option value="zh-TW">Chinese (Traditional)</option>
+				<option value="hr">Croatian</option>
+				<option value="cs">Czech</option>
+				<option value="da">Danish</option>
+				<option value="nl">Dutch</option>
+				<option value="en">English</option>
+				<option value="et">Estonian</option>
+				<option value="tl">Filipino</option>
+				<option value="fi">Finnish</option>
+				<option value="fr">French</option>
+				<option value="gl">Galician</option>
+				<option value="ka">Georgian</option>
+				<option value="de">German</option>
+				<option value="el">Greek</option>
+				<option value="gu">Gujarati</option>
+				<option value="ht">Haitian Creole</option>
+				<option value="iw">Hebrew</option>
+				<option value="hi">Hindi</option>
+				<option value="hu">Hungarian</option>
+				<option value="is">Icelandic</option>
+				<option value="id">Indonesian</option>
+				<option value="ga">Irish</option>
+				<option value="it">Italian</option>
+				<option value="ja">Japanese</option>
+				<option value="kn">Kannada</option>
+				<option value="ko">Korean</option>
+				<option value="la">Latin</option>
+				<option value="lv">Latvian</option>
+				<option value="lt">Lithuanian</option>
+				<option value="mk">Macedonian</option>
+				<option value="ms">Malay</option>
+				<option value="mt">Maltese</option>
+				<option value="no">Norwegian</option>
+				<option value="fa">Persian</option>
+				<option value="pl">Polish</option>
+				<option value="pt">Portuguese</option>
+				<option value="ro">Romanian</option>
+				<option value="ru">Russian</option>
+				<option value="sr">Serbian</option>
+				<option value="sk">Slovak</option>
+				<option value="sl">Slovenian</option>
+				<option value="es" selected="selected">Spanish</option>
+				<option value="sw">Swahili</option>
+				<option value="sv">Swedish</option>
+				<option value="ta">Tamil</option>
+				<option value="te">Telugu</option>
+				<option value="th">Thai</option>
+				<option value="tr">Turkish</option>
+				<option value="uk">Ukrainian</option>
+				<option value="ur">Urdu</option>
+				<option value="vi">Vietnamese</option>
+				<option value="cy">Welsh</option>
+				<option value="yi">Yiddish</option>
+			</select>
+		</td>
+        </tr>
+		<tr>
+         <td>Format:</td>
+         <td><input type="radio" name="format" value="json" checked='checked'/>JSON&nbsp;<input type="radio" name="format" value="xml"/>XML</td>
+        </tr>
+        <tr>
+        <td colspan='2'><input type="submit" value=" Invoke " /></td>
+        </tr>
+        </table>
+        <br /> 
+</fieldset>
+</form>
+<h4>Built by <a href="http://www.acsysinteractive.com">Acsys Interactive</a>.</h4>
+<small>
+Health Data provided by <a href="http://www.nlm.nih.gov/medlineplus/" target="_new">MedlinePlus</a>, Hospital and Dialysis Facility data provided by <a href="http://www.medicare.gov/download/downloaddb.asp" target="_new">Medicare.gov</a>, Health Information Updates provided by <a href="http://www.fda.gov" target="_new">U.S. Food and Drug Administration</a>, Health News provided by <a href="http://www.nlm.nih.gov/medlineplus/" target="_new">MedlinePlus</a>, Geocoding and Maps provided by <a href="http://code.google.com/apis/maps/index.html" target="_new">Google Maps API</a>, Data Translation provided by <a href="http://translate.google.com/" target="_new">Google Translate API</a>.
+</small>
+</div>	
+<hr /> 
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-24252811-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
+</html>

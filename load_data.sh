@@ -1,0 +1,1 @@
+appcfg.py upload_data --config_file=DataLoaderHospitalInfo.py --has_header --batch_size=50 --rps_limit=200  --num_threads=5 --filename=api/data/hosp_comparison_address_utf8-payload1.csv --kind=HospitalInfo --url=http://localhost:8084/remote_api --email=glebp@acsysweb.com --passin .

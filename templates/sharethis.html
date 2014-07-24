@@ -1,0 +1,31 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<meta charset="utf-8"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<title>My Health Topics - {{sharethis_label}}</title> 
+	<link rel="stylesheet"  href="http://code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.css" />  
+	<script src="http://code.jquery.com/jquery-1.6.2.min.js"></script> 
+	<script src="http://code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.js"></script> 
+	
+	
+</head> 
+<body> 
+ 
+<div data-role="page"> 
+
+
+	<div data-role="content" data-theme="a"> 
+		<h3>{{sharethis_label}}</h3> 
+		<a href="mailto:?subject={{topic_text}}&body=%0A{{topic_url}}" data-role="button" data-rel="dialog" data-transition="slidedown" data-theme="b">Email</a>     
+		<a href="http://api.addthis.com/oexchange/0.8/forward/facebook/offer?url={{topic_url}}&title={{topic_text}}" data-role="button" data-rel="dialog" data-transition="slidedown" data-theme="b">Facebook</a>      
+		<a href="http://api.addthis.com/oexchange/0.8/forward/twitter/offer?url={{topic_url}}&title={{topic_text}}" data-role="button" data-rel="dialog" data-transition="slidedown" data-theme="b">Twitter</a>       
+		<a href="http://www.addthis.com/bookmark.php?url={{topic_url}}&title={{topic_text}}" data-role="button" data-rel="dialog" data-transition="slidedown" data-theme="b">Bookmark</a> 
+		
+		<a href="#" data-role="button" data-rel="back" data-theme="a">{{closewindow_label}}</a>    
+	</div> 
+</div> 
+ 
+ 
+</body> 
+</html>

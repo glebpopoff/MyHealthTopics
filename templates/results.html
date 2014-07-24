@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html> 
+	<head> 
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1"> 
+		<title>My Health Topics</title> 
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.css" /> 
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.1.min.js"></script> 
+		<script type="text/javascript" src="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.js"></script> 
+		<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script> 
+		<link rel="stylesheet" href="/static/css/app-ui.css" />
+		<style type="text/css"> 
+			.noShowTopic
+				{
+					display:none;
+				}
+				.ui-page
+				{
+					width:300px;
+				}
+
+				.ui-li-desc, .ui-li-heading
+				{
+					white-space:normal;
+
+				}
+		</style> 
+	</head> 
+<body> 
+<div data-role="page" id="ResultsPage" data-theme="c" > 
+ 
+	<div data-role="header" data-theme="b"> 
+    	<a href="/?lan={{language_param}}" data-ajax="false" data-icon="arrow-l">{{backbutton_label}}</a> 
+		<h1>My Health Topics</h1> 
+        <a href="/share?lan={{language_param}}&topic={{health_main_topic_encoded}}&url={{url_encoded}}" data-rel="dialog" data-transition="pop" data-icon="star" class="ui-btn-right">{{sharethis_label}}</a> 
+	</div> 
+ 
+	<div data-role="content" >	
+	<fieldset class="ui-grid-a " > 
+	<div class="ui-block-a" style="width:100%;"> 
+	<div data-role="controlgroup" data-type="horizontal" id="topicLinkGroup"> 
+		{% if health_data_label1 %}
+		<a href="#" id="linkTopicone" data-role="button" onclick="SwapTopic('one');" class='topicheader'>{{health_data_label1}}</a> 
+		{% endif %}
+		{% if health_data_label2 %}
+		<a href="#" id="linkTopictwo" data-role="button" onclick="SwapTopic('two');" class='topicheader'>{{health_data_label2}}</a> 
+		{% endif %}
+		{% if health_data_label3 %}
+		<a href="#" id="linkTopicthree" data-role="button" onclick="SwapTopic('three');" class='topicheader'>{{health_data_label3}}</a> 
+		{% endif %}
+	</div> 
+	</div> 
+	</fieldset> 
+	{% if health_data_summary1 %}
+	<div id="one" class="showTopic"> 
+	<div class="health-topic-boost-wrapper"><div style="width:65%;float:left;padding-bottom:0;">{{health_data_summary1}}</div><div style="width:25%;float:right;padding:1em"><div class="alt-contents">{% if health_topic_image %}<img width="150" title="{{health_data_label1}}" alt="{{health_data_label1}}" src="{{ health_topic_image }}" />{% endif %}<br style="clear: both;"></div></div><div style="clear:both"></div></div> 
+	</div> 
+	{% endif %}
+	{% if health_data_label2 %}
+	<div id="two" class="noShowTopic" > 
+	<div class="health-topic-boost-wrapper"><div style="width:65%;float:left;padding-bottom:0;">{{health_data_summary2}}</div><div style="width:25%;float:right;padding:1em"><div class="alt-contents">{% if health_topic_image %}<img width="150" title="{{health_data_label2}}" alt="{{health_data_label2}}" src="{{ health_topic_image }}" />{% endif %}<br style="clear: both;"></div></div><div style="clear:both"></div></div> 
+	</div> 
+	{% endif %}
+	{% if health_data_label3 %}
+	<div id="three" class="noShowTopic" > 
+	<div class="health-topic-boost-wrapper"><div style="width:65%;float:left;padding-bottom:0;">{{health_data_summary3}}</div><div style="width:25%;float:right;padding:1em"><div class="alt-contents">{% if health_topic_image %}<img width="150" title="{{health_data_label3}}" alt="{{health_data_label3}}" src="{{ health_topic_image }}" />{% endif %}<br style="clear: both;"></div></div><div style="clear:both"></div></div> 
+	</div> 
+	{% endif %}
+
+			<div data-role="collapsible-set"> 
+			<div data-role="collapsible" data-theme="b" data-collapsed="true" id="HospitalPanel"> 
+			<h3>{{hospitalstab_label}}</h3> 
+			<p> 
+				<fieldset class="ui-grid-a " > 
+				<div class="ui-block-a" style="width:60%;"> 
+				<ul id="hsopitalsArea" data-role="listview" data-theme="c" style="width:101%;"> 
+					{{hospital_data_results}}
+				</ul>
+			</div> 
+			<div class="ui-block-b" style="width:35%;"> 
+				<div id="map_canvas" style="width:100%;height:298px;left:20px;"></div>	
+			</div> 
+			</fieldset> 
+			</p> 
+			</div> 
+			<div data-role="collapsible" data-theme="b" data-collapsed="true" id="clinicalTrialsPanel"> 
+				<h3>{{clinicaltrialstab_label}}</h3> 
+			<p> 
+				<ul id="clinicalTrialsArea" data-role="listview" data-theme="c" style="width:101%;"> 
+				<li> 
+					<div style="margin-left:40%;margin-right:40%;"> 
+						<img src="/static/images/bufferClip.gif" border="0" /> 
+					</div> 
+				</li> 
+				</ul> 
+			</p> 
+			</div> 
+			<div data-role="collapsible" data-theme="b" id="healthUpdatesPanel" data-collapsed="true"> 
+				<h3>{{healthupdatestab_label}}</h3> 
+			<p> 
+				<ul id="healthUpdatesContent" data-role="listview" data-theme="c" style="width:101%;"> 
+				<li> 
+					<div style="margin-left:40%;margin-right:40%;"> 
+						<img src="/static/images/bufferClip.gif" border="0" /> 
+					</div> 
+				</li> 
+				</ul> 
+			</p> 
+			</div> 
+			<div data-role="collapsible" data-theme="b" id="healthNewsPanel" data-collapsed="true"> 
+			<h3>{{healthnewstab_label}}</h3> 
+			<p> 
+				<ul id="healthNewsContent" data-role="listview" data-theme="c" style="width:101%;"> 
+				<li> 
+					<div style="margin-left:40%;margin-right:40%;"> 
+						<img src="/static/images/bufferClip.gif" border="0" /> 
+					</div> 
+				</li> 
+				</ul> 
+			</p> 
+			</div> 
+		</div> 
+	</div> 
+ 
+	<div data-role="footer" data-theme="c" style="text-align:left;padding:10px 10px 10px 10px"> 
+	
+			<a href="/about" data-rel="dialog" data-transition="flip" data-icon="info" class="ui-btn-right"> {{aboutus_label}} </a>
+	
+	</div>
+</div> 
+		<script type="text/javascript"> 
+		var newsLoaded = false;
+		var updatesLoaded = false;
+		var trialsLoaded = false;
+		var mapLoaded = false;
+		var geocoder;
+		var map;
+		var markers = [];
+		var hasclicked = 0;
+		var attempts = 0;
+		var gmapWait = false;
+		var markerShadowURL = "/images/location_icon_shadow.png";
+		
+		function initialize(event) {
+			// return;
+			if (!mapLoaded)
+			{
+				geocoder = new google.maps.Geocoder();
+				var latlng = new google.maps.LatLng({{user_lat}}, {{user_lon}});
+				var myOptions = {
+					zoom: 10,
+					maxZoom: 16,
+					center: latlng,
+					mapTypeControl: false,
+					mapTypeId: google.maps.MapTypeId.ROADMAP
+				};
+				map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+				var markers = [];
+				
+				{{hospital_map_results}}
+				
+				mapLoaded = true;
+			}
+			
+			
+		}	
+		
+		function openinfowindow(mp, mk) {
+
+					hasclicked = 1;
+					var contentString = mk.cont;
+
+					if (typeof(infowindow) != 'undefined')
+					{
+						infowindow.close();
+					}
+					infowindow = new google.maps.InfoWindow({
+						content: contentString
+					});
+
+
+					google.maps.event.addListener(infowindow, 'closeclick', function() {
+						hasclicked = 0;
+					})
+
+					infowindow.open(mp, mk);
+				}
+
+				function codeLatLon(lat, lon, titlestring, id, content) {
+					var latlng = new google.maps.LatLng(lat, lon);
+					map.setCenter(latlng);
+
+					var shadowMarker = new google.maps.MarkerImage(markerShadowURL);
+
+					var markerUrlNormal = ""
+					var markerUrlHilite = "markeryellow.png"
+
+					//Preload highlite color
+					if (document.images) {
+						var preload_image = new Image(25, 25);
+						preload_image.src = markerUrlHilite;
+					}
+
+					var marker = new google.maps.Marker({
+						map: map, title: titlestring.replace("&amp;", "&"),
+						position: latlng,
+						flat: false,
+						id: id,
+						icon: markerUrlNormal,
+						cont: titlestring + "<br />" + content
+					});
+
+					markers.push(marker);
+
+					if (id) {
+
+						google.maps.event.addListener(marker, 'mouseover', function() {
+							marker.setIcon(markerUrlHilite);
+						})
+
+						google.maps.event.addListener(marker, 'mouseout', function() {
+							marker.setIcon(markerUrlNormal);
+						})
+
+						$("#" + marker.id).live('vclick', function() { 
+							if (typeof(prevMarker) != 'undefined')
+								prevMarker.setIcon(markerUrlNormal);
+							prevMarker = marker;
+							marker.setIcon(markerUrlHilite);
+							openinfowindow(map, marker); 
+							})
+					}
+
+
+					google.maps.event.addListener(marker, 'click', function() {
+						openinfowindow(map, marker);
+					});
+
+
+				}
+						
+		$(document).ready(function () {
+			$("#linkTopicone").attr('data-theme','b');
+			{% if translate_data %}
+				TranslateTopics();
+			{% endif %}
+		});
+		
+		$('#ResultsPage').live('pagecreate',function(event) {
+					$("#healthUpdatesPanel").live('vclick', GetHealthInfo);
+					$("#healthNewsPanel").live('vclick', GetHealthInfo);
+					$("#clinicalTrialsPanel").live('vclick', GetClinicalTrials);
+					$("#linkTopicone").live('vclick', SwapTopic);
+					$("#linkTopictwo").live('vclick', SwapTopic);
+					$("#linkTopicthree").live('vclick', SwapTopic);
+					$("#HospitalPanel").live('vclick', initialize);
+					$("#facebookButton").attr("href",$("#facebookButton").attr("href")+ "url=" + escape(document.URL) + "&title=" + escape(document.title));
+					$("#twitterButton").attr("href",$("#twitterButton").attr("href")+ "url=" + escape(document.URL) + "&title=" + escape(document.title));
+				});
+		
+		function SwapTopic(event)
+		{
+			var topic = "";
+			if (this.id == "linkTopicone")
+				topic = "one";
+			else if (this.id == "linkTopictwo")
+				topic = "two";
+			else
+				topic = "three";
+			//Oddly enough, jquery mobile doesn't support dynamic theme changing very well, so we have to get creative
+			$("#topicLinkGroup a").each(function(index) {
+				$(this).attr('data-theme','c').addClass("ui-btn-up-c").removeClass("ui-btn-up-b").removeClass("ui-btn-hover-b");
+				
+			});
+			$("#linkTopic"+topic).attr('data-theme','b').addClass("ui-btn-up-b").removeClass("ui-btn-hover-c").removeClass("ui-btn-up-c");
+			$('#ResultsPage').trigger("pageshow"); 
+			
+			$(".showTopic").removeClass('showTopic').addClass('noShowTopic');
+			$("#"+topic).addClass('showTopic').removeClass('noShowTopic');
+		}
+		
+		function TranslateTopics() {
+					
+					$('.health-topic-boost-wrapper').each(function(index) {
+						var text = $(this).html();
+						$(this).html('Translating...');
+						$.ajax({
+						   type: "POST",
+						   url: "/api/translate",
+						   data: "format=json&language=es&striphtml=true&data=" + escape(text),
+						   success: function(msg){
+							//console.log(msg.data); 
+							if (msg && msg.data)
+							{
+								$('.health-topic-boost-wrapper').eq(index).html(msg.data);
+								//$('.health-topic-boost-wrapper:nth-child('+index+')').html(msg.data);
+							}
+						   }
+						});
+					  });
+					
+					//translate first header
+					$.ajax({
+					   type: "POST",
+					   url: "/api/translate",
+					   data: "format=json&language=es&striphtml=true&data=" + escape($('#linkTopicone').html()),
+					   success: function(msg){
+						//console.log(msg.data); 
+						if (msg && msg.data)
+						{
+						//$('#linkTopicone').html(msg.data);
+							$("#linkTopicone").children().children().text(msg.data);
+						}
+					   }});
+					
+					//translate second header
+					$.ajax({
+					   type: "POST",
+					   url: "/api/translate",
+					   data: "format=json&language=es&striphtml=true&data=" + escape($('#linkTopictwo').html()),
+					   success: function(msg){
+						//console.log(msg.data); 
+						if (msg && msg.data)
+						{
+						//$('#linkTopicone').html(msg.data);
+							$("#linkTopictwo").children().children().text(msg.data);
+						}
+					   }});
+					
+					//translate third header
+					$.ajax({
+					   type: "POST",
+					   url: "/api/translate",
+					   data: "format=json&language=es&striphtml=true&data=" + escape($('#linkTopicthree').html()),
+					   success: function(msg){
+						//console.log(msg.data); 
+						if (msg && msg.data)
+						{
+						//$('#linkTopicone').html(msg.data);
+							$("#linkTopicthree").children().children().text(msg.data);
+						}
+					   }});
+				}
+		
+		function GetClinicalTrials(event)
+		{
+			if (!trialsLoaded)
+			{
+				$.getJSON("/api/clinicaltrials/keyword/{{query_param}}/state/{{user_state}}/format/json", function(data) {
+					var i = 0;
+					$("#clinicalTrialsArea").html("");
+
+					while (i < 25 && i < data.length)
+					{
+
+						var entryElement = document.createElement("li");
+						var table = document.createElement("table");
+						$(table).attr("wdith","100%").attr("cellspacing","3");
+						var row = table.insertRow(0);
+						var header = document.createElement("h4");
+						$(header).addClass("ui-li-heading");
+
+
+						var link = $(document.createElement("a")).text(data[i].title).attr("href",data[i].link);
+						$(header).append(link);
+
+						var body = $(document.createElement("div")).html(unescape(data[i].summary).replace(/\&lt\;/g,"<").replace(/\&gt\;/g,">").replace(/\&amp\;/g,"&").replace("<p>",""));
+						$(body).addClass("ui-li-desc");
+
+						var rightCol = $(document.createElement("div")).html(data[i].status).addClass("ui-li-heading");
+
+						if (data[i].status == "Recruiting")
+							$(rightCol).css("color","green");
+						else if (data[i].status == "Completed" || data[i].status == "Active, not recruiting")
+							$(rightCol).css("color","red");
+						else
+							$(rightCol).css("color","#774400");
+
+						var cell = row.insertCell(0);
+						$(cell).attr("width","180px;");
+						$(cell).append(rightCol);
+						cell = row.insertCell(1);
+
+						$(cell).append(header);
+						$(cell).append(body);
+
+						$(entryElement).append(table);
+
+						$("#clinicalTrialsArea").append(entryElement);
+
+						i++;
+					}
+
+					$("#clinicalTrialsArea").listview('refresh');
+
+					trialsLoaded = true;
+				});
+			}
+
+		}
+
+		function GetHealthInfo(event)
+		{
+			var targetElement = "";
+			var targetJSON = "";
+			var currentPanel = event.handleObj.selector.substring(1);
+			if (currentPanel == "healthNewsPanel")
+			{
+				targetElement = "#healthNewsContent";
+				targetJSON = "/api/healthnews/lan/{{language_param}}/format/json"
+			} else {
+				targetElement = "#healthUpdatesContent";
+				targetJSON = "/api/healthupdates/format/json"
+			}
+
+			if ((currentPanel == "healthNewsPanel" && !newsLoaded) || (currentPanel == "healthUpdatesPanel" && !updatesLoaded))
+			{
+				$.getJSON(targetJSON, function(data) {
+					var i = 0;
+					$(targetElement).html("");
+					while (i < 25 && i < data.length)
+					{
+						var entryElement = document.createElement("li");
+
+						var header = document.createElement("h4");
+						$(header).addClass("ui-li-heading");
+						var link = $(document.createElement("a")).text(data[i].title).attr("href",data[i].url);
+						$(header).append(link);
+
+						var body = $(document.createElement("div")).html(unescape(data[i].description).replace(/\&lt\;/g,"<").replace(/\&gt\;/g,">").replace(/\&amp\;/g,"&").replace("<p>",""));
+						$(body).addClass("ui-li-desc");
+						$(entryElement).append(header);
+						$(entryElement).append(body);
+
+						$(targetElement).append(entryElement);
+						i++;
+					}
+
+					if (currentPanel == "healthNewsPanel")
+						newsLoaded = true;
+					else
+						updatesLoaded = true;
+
+					$(targetElement).listview('refresh');
+				});
+			}
+		}
+		
+	</script> 
+	
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-24252811-2']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+</body>
+</html>

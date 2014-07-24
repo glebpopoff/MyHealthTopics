@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html> 
+	<head> 
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;" />
+		<link rel="apple-touch-icon" sizes="114x114" href="/static/images/icon_114.png" />
+		<link rel="apple-touch-icon" sizes="72x72" href="/static/images/icon_72.png" />
+		<link rel="apple-touch-icon" href="/static/images/icon_57.png" />
+		<title>My Health Topics</title> 
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.css" /> 
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.1.min.js"></script> 
+		<script type="text/javascript" src="http://code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.js"></script> 
+		<link rel="stylesheet" href="/static/css/app-ui.css" />
+		<style type="text/css"> 
+			.ui-li-desc
+			{
+				white-space:normal;
+
+			}
+
+			.ui-content .ui-listview
+			{
+				margin: 0px;
+			}
+			
+			.ui-li-heading
+						{
+							white-space:normal;
+
+						}
+			
+		</style>
+		<script type="text/javascript">
+		
+			var userLat = '';
+			var userLon = '';
+			function checkboxValue(name) 
+			{ 
+				var elm = document.getElementsByName(name);
+				if (!elm)
+				{
+					return 'keyword';
+				}
+				for( i = 0; i < elm.length; i++)
+				{
+					if (elm[i].checked) return elm[i].value;
+				}
+				return 'keyword';
+			}
+			
+			function submitForm()
+			{
+				window.location = '/results?lan={{language}}&keyword=' + escape($('#search').val()) + '&zip=' + $('#zip').val() + '&type=' + checkboxValue('searchType') + '&lat=' + userLat + '&lon=' + userLon;
+			}
+		
+			function getUserLocation(position) {
+			   userLat = position.coords.latitude;
+			   userLon = position.coords.longitude;
+			}
+			// One-shot position request.
+			
+		
+			$(document).ready(function() {
+					
+					navigator.geolocation.getCurrentPosition(getUserLocation);
+					
+					var language = '{{language}}';
+					
+					if (language == "es")
+					{
+						$("#legend-language").text("Lengua:");
+						$("#label-search").text("Búsqueda:");
+						$("#label-zip").text("Código Postal:");
+						$("#legend-type").text("Tipo de Búsqueda:");
+						$("#label-keyword").children().children().text("Palabra Clave");
+						$("#legend-content").text("Mi Contenido:");
+						
+					} else {
+						$("#legend-language").text("Language:");
+						$("#label-search").text("Search:");
+						$("#label-zip").text("Zip Code:");
+						$("#legend-type").text("Search Type:");
+						$("#label-keyword").children().children().text("Keyword");
+						$("#legend-content").text("My Content:");
+						
+					}
+					
+				});
+				
+		</script>
+</head> 
+<body>
+	
+	<div id="result"></div>
+<div data-role="page"> 
+ 
+	<div data-role="header" data-position="fixed" data-theme="b"> 
+		<h1>My Health Topics</h1> 
+	</div> 
+ 
+	<div data-role="content"  >	
+<fieldset class="ui-grid-a " > 
+	<div class="ui-block-a" {% if is_mobile %}style="width:100%"{% endif %} > 
+    <div class="ui-bar ui-bar-c" style="width:91%" > 
+		<div data-role="fieldcontain"> 
+			<fieldset data-role="controlgroup" data-type="horizontal"> 
+				<legend><span id="legend-language">Language</span></legend> 
+					<input type="radio" name="languages" id="language-english" value="English" {{language_selection_english}} onchange="ChangeLanguage('english');" /> 
+					<label for="language-english" id="label-english" >English</label> 
+ 
+					<input type="radio" name="languages" id="language-spanish" value="Spanish" {{language_selection_spanish}} onchange="ChangeLanguage('spanish');"  /> 
+					<label for="language-spanish" id="label-spanish" >Español</label> 
+			</fieldset> 
+			
+		</div> 
+		<div data-role="fieldcontain" > 
+			<label for="search" id="label-search">Search:</label> 
+			<input type="search" name="search" id="search" value="" /> 
+		</div> 
+		<div data-role="fieldcontain"> 
+			<fieldset data-role="controlgroup" data-type="horizontal"> 
+				<legend><span id="legend-type">Search Type</span></legend> 
+					<input type="radio" name="searchType" id="type-keyword" value="keyword" checked="checked" /> 
+					<label for="type-keyword" id="label-keyword" >{{keywordicd9switchlabel}}</label> 
+ 
+					<input type="radio" name="searchType" id="type-icd" value="icd9"  /> 
+					<label for="type-icd" id="label-icd">ICD9</label> 
+			</fieldset> 
+		</div> 
+		<div data-role="fieldcontain"> 
+			<label for="zip" id="label-zip" >Zip Code:</label> 
+			<input type="text" name="zip" id="zip" value="" /> 
+		</div> 
+		<div data-role="fieldcontain" style="float:right;"> 
+			<button type="submit" data-theme="b" data-icon="search" name="submit" value="submit-value" onclick="return submitForm()">{{search_button_label}}</button>
+        </div> 
+		
+	</div> 
+	
+    </div> 
+{% if is_mobile %}
+</div>
+<div>
+{% endif %} 
+		<div class="ui-block-b" {% if is_mobile %} style="padding: 10px" {% endif %} data-scroll="true" data-scroll-innerheight="500"> 
+		
+						<ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="f" class="healthnews">
+						<li data-role="list-divider">{{healthnewslabel}}</li>
+						{{healthnews}}
+						<li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c"><div class="ui-btn-inner ui-li"><div class="ui-btn-text" style="text-align:right"><a href="/news?lan={{language}}" data-rel="dialog" data-transition="pop" class="ui-link-inherit"><h3 class="ui-li-heading">{{more_news_label}}</h3></a></div><span class="ui-icon ui-icon-arrow-r ui-icon-shadow"></span></div></li>
+						
+					</ul>
+					
+
+				
+		</div> 
+	</div> 
+       
+</fieldset>
+
+
+ 
+	<div data-role="footer" data-theme="c" style="text-align:left;padding:10px 10px 10px 10px"> 
+	
+			<a href="/about" data-rel="dialog" data-transition="flip" data-icon="info" class="ui-btn-right"> {{aboutus_label}} </a>
+	
+	</div> 
+</div> 
+
+
+	<script type="text/javascript"> 
+		function ChangeLanguage(language)
+		{
+			if (language == "spanish")
+			{
+				window.location = '/?lan=es'
+			} else {
+				window.location = '/?lan=en'
+			}
+		}
+	</script> 
+
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-24252811-2']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+</body>
+</html>

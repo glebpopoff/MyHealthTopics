@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html> 
+	<head> 
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>My Health Topics: Aggregated Health Data Source</title> 
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.css" /> 
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.1.min.js"></script> 
+		<script type="text/javascript" src="http://code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.js"></script> 
+		<link rel="stylesheet" href="/static/css/app-ui.css" />
+		<style type="text/css"> 
+			.ui-li-desc
+			{
+				white-space:normal;
+
+			}
+
+			.ui-content .ui-listview
+			{
+				margin: 0px;
+			}
+			
+			.ui-li-heading
+						{
+							white-space:normal;
+
+						}
+			
+		</style>
+</head> 
+<body>
+<div data-role="page"> 
+
+			<div data-role="header" data-theme="d" data-position="inline"> 
+				<h1>{{healthnews_label}}</h1> 
+
+			</div> 
+
+			<div data-role="content" data-theme="c"> 
+				<ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="f" class="healthnews">
+				{{healthnews_data}}
+				
+				
+			</ul>
+				<a href="#" data-role="button" data-rel="back" data-theme="c">{{closewindow_label}}</a>    
+			</div> 
+		</div> 
+
+
+
+ 
+
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-24252811-2']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+</body>
+</html>
