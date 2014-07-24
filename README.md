@@ -15,6 +15,6 @@ Have fun!
 
 ![alt tag](https://raw.githubusercontent.com/glebpopov/MyHealthTopics/master/static/images/screenshot1.png)
 
-[alt tag](https://raw.githubusercontent.com/glebpopov/MyHealthTopics/master/static/images/screenshot2.png)
+![alt tag](https://raw.githubusercontent.com/glebpopov/MyHealthTopics/master/static/images/screenshot2.png)
 
-[alt tag](https://raw.githubusercontent.com/glebpopov/MyHealthTopics/master/static/images/screenshot3.png)
+![alt tag](https://raw.githubusercontent.com/glebpopov/MyHealthTopics/master/static/images/screenshot3.png)
